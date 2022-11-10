@@ -12,7 +12,7 @@
         <Grid x:Name="host">
             <Image>
                 <Image.Source>
-                    <DXExtensions::D3D11Image x:Name="InteropImage" />
+                    <DXExtensions:D3D11Image x:Name="InteropImage" />
                 </Image.Source>
             </Image>
         </Grid>
