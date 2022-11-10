@@ -1,0 +1,18 @@
+# Blender MTL File: 'Barrel_01_1k.blend'
+# Material Count: 1
+
+newmtl Barrel_01
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.588235 0.588235 0.588235
+Ks 0.000000 0.000000 0.000000
+Metallic 1.000000
+Roughness 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Bump textures\\Barrel_01_explosive_nor_gl_1k.png
+map_Kd textures\\Barrel_01_explosive_diff_1k.png
+map_Ns textures\\Barrel_01_explosive_roughness_1k.png
+refl textures\\Barrel_01_explosive_metallic_1k.png
