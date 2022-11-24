@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using System.Numerics;
 
 namespace GameEngineUI
 {
@@ -26,7 +27,7 @@ namespace GameEngineUI
        
         TimeSpan lastRender;
         bool lastVisible;
-
+        Point oldMousePosition;
 
         public MainWindow()
         {
@@ -168,7 +169,25 @@ namespace GameEngineUI
 
             [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern int Render(IntPtr resourcePointer, bool isNewSurface);
-           
+
+            [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void SetObjectPosition(string ObjectName, Vector3 Position);
+
+            [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void SetObjectRotation(string ObjectName, Vector3 Rotaion);
+
+            [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void SetObjectScale(string ObjectName, Vector3 Scale);
+
+            [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern Vector3 GetObjectPosition(string ObjectName);
+
+            [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern Vector3 GetObjectRotation(string ObjectName);
+
+            [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern Vector3 GetObjectScale(string ObjectName);
+
             /// <summary>
             /// Method used to invoke an Action that will catch DllNotFoundExceptions and display a warning dialog.
             /// </summary>
@@ -214,6 +233,38 @@ namespace GameEngineUI
 
                 return default(T);
             }
+        }
+
+        private void Host_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point mousePosition = e.GetPosition(host);
+            Vector3 cameraPosition = NativeMethods.InvokeWithDllProtection(() => NativeMethods.GetObjectPosition("Camera"));
+            Vector3 cameraRotation = NativeMethods.InvokeWithDllProtection(() => NativeMethods.GetObjectRotation("Camera"));
+
+            if(e.RightButton == MouseButtonState.Pressed)
+            {
+                cameraRotation.Y += (float)(mousePosition.X - oldMousePosition.X) * 0.003f;
+                cameraRotation.X += (float)(mousePosition.Y - oldMousePosition.Y) * 0.003f;
+                NativeMethods.InvokeWithDllProtection(() => NativeMethods.SetObjectRotation("Camera", cameraRotation));
+
+            }
+
+            if(e.LeftButton == MouseButtonState.Pressed)
+            {
+                float dx = (float)(mousePosition.X - oldMousePosition.X) * 0.01f;
+                float dy = (float)(mousePosition.Y - oldMousePosition.Y) * 0.01f;
+
+                cameraPosition.X -= (float)Math.Cos(cameraRotation.Y) * dx
+                    - (float)Math.Sin(cameraRotation.Y) * (float)Math.Sin(cameraRotation.X) * dy;
+                cameraPosition.Z += (float)Math.Sin(cameraRotation.Y) * dx
+                    + (float)Math.Cos(cameraRotation.Y) * (float)Math.Sin(cameraRotation.X) * dy;
+                cameraPosition.Y += (float)Math.Cos(cameraRotation.X) * dy;
+
+                NativeMethods.InvokeWithDllProtection(() => NativeMethods.SetObjectPosition("Camera", cameraPosition));
+
+            }
+
+            oldMousePosition = mousePosition;
         }
     }
 }

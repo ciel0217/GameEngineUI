@@ -9,7 +9,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
 
-        <Grid x:Name="host">
+        <Grid x:Name="host" MouseMove="Host_MouseMove">
             <Image>
                 <Image.Source>
                     <DXExtensions:D3D11Image x:Name="InteropImage" />
