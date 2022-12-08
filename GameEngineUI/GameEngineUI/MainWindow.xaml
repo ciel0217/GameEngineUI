@@ -9,7 +9,23 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
 
-        <Grid x:Name="host" MouseMove="Host_MouseMove">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <TabControl Grid.Column="0">
+
+            <TabItem Header="Hierarchy">
+                <ListBox x:Name="HierarchyListBox">
+                </ListBox>
+            </TabItem>
+        </TabControl>
+
+        <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"/>
+        <Grid Grid.Column ="2" x:Name="host" AllowDrop="True" PreviewDrop="Host_PreviewDrop" MouseMove="Host_MouseMove">
             <Image>
                 <Image.Source>
                     <DXExtensions:D3D11Image x:Name="InteropImage" />

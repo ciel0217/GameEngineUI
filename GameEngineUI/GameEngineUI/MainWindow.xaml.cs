@@ -29,6 +29,27 @@ namespace GameEngineUI
         bool lastVisible;
         Point oldMousePosition;
 
+        public class GameObject
+        {
+            public Vector3 Position{get; set;} = new Vector3(0.0f, 0.0f, 0.0f);
+            public Vector3 Rotation { get; set; } = new Vector3(0.0f, 0.0f, 0.0f);
+            public Vector3 Scale { get; set; } = new Vector3(1.0f, 1.0f, 1.0f);
+
+            public string ModelName { get; set; }
+
+            public object Content;
+
+            public GameObject(string content)
+            {
+                Content = content;
+            }
+
+            public override string ToString()
+            {
+                return Content.ToString();
+            }
+        }
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -188,6 +209,9 @@ namespace GameEngineUI
             [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
             public static extern Vector3 GetObjectScale(string ObjectName);
 
+            [DllImport("GameEngineDLL.dll", CallingConvention = CallingConvention.Cdecl)]
+            public static extern void AddObject(string ObjectName, string FileName);
+
             /// <summary>
             /// Method used to invoke an Action that will catch DllNotFoundExceptions and display a warning dialog.
             /// </summary>
@@ -265,6 +289,26 @@ namespace GameEngineUI
             }
 
             oldMousePosition = mousePosition;
+        }
+
+        private void Host_PreviewDrop(object sender, DragEventArgs e)
+        {
+            string[] paths = ((string[])e.Data.GetData(DataFormats.FileDrop));
+
+            for(int i = 0; i < paths.Length; i++)
+            {
+                string filename = paths[i];
+                string objectName = System.IO.Path.GetFileNameWithoutExtension(filename);
+
+                GameObject gameObject = new GameObject(objectName);
+                gameObject.ModelName = filename;
+
+                HierarchyListBox.Items.Add(gameObject);
+
+                NativeMethods.InvokeWithDllProtection(() =>
+                NativeMethods.AddObject(objectName, filename));
+            }
+           
         }
     }
 }
