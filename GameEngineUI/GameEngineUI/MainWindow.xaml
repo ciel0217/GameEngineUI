@@ -13,6 +13,8 @@
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="250"/>
         </Grid.ColumnDefinitions>
 
         <TabControl Grid.Column="0">
@@ -32,5 +34,24 @@
                 </Image.Source>
             </Image>
         </Grid>
+
+        <GridSplitter Grid.Column="3" Width="4" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+        <TabControl Grid.Column="4">
+
+            <TabItem Header="Inspector">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Position"/>
+                        <Label Content="X"/>
+                        <TextBox x:Name="PositionX" Text="0.0" KeyDown="Inspector_KeyDown"/>
+                        <Label Content="Y"/>
+                        <TextBox x:Name="PositionY" Text="0.0" KeyDown="Inspector_KeyDown"/>
+                        <Label Content="Z"/>
+                        <TextBox x:Name="PositionZ" Text="0.0" KeyDown="Inspector_KeyDown"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

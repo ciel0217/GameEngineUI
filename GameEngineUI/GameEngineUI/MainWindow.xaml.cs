@@ -273,7 +273,7 @@ namespace GameEngineUI
 
             }
 
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if(e.MiddleButton == MouseButtonState.Pressed)
             {
                 float dx = (float)(mousePosition.X - oldMousePosition.X) * 0.01f;
                 float dy = (float)(mousePosition.Y - oldMousePosition.Y) * 0.01f;
@@ -286,6 +286,25 @@ namespace GameEngineUI
 
                 NativeMethods.InvokeWithDllProtection(() => NativeMethods.SetObjectPosition("Camera", cameraPosition));
 
+            }
+
+            if(e.LeftButton == MouseButtonState.Pressed)
+            {
+                GameObject gameObject = HierarchyListBox.SelectedItem as GameObject;
+
+                if (gameObject == null)
+                    return;
+
+                float dx = (float)(mousePosition.X - oldMousePosition.X) * 0.01f;
+                float dy = (float)(mousePosition.Y - oldMousePosition.Y) * 0.01f;
+
+                Vector3 position = gameObject.Position;
+                position.X += (float)Math.Cos(cameraRotation.Y) * dx - (float)Math.Sin(cameraRotation.Y) * (float)Math.Sin(cameraRotation.X) * dy;
+                position.Z -= (float)Math.Sin(cameraRotation.Y) * dx + (float)Math.Cos(cameraRotation.Y) * (float)Math.Sin(cameraRotation.X) * dy;
+                position.Y -= (float)Math.Cos(cameraRotation.X) * dy;
+                gameObject.Position = position;
+                ObjectToInspector();
+                //NativeMethods.InvokeWithDllProtection(() => NativeMethods.SetObjectPosition(gameObject.ToString(), gameObject.Position));
             }
 
             oldMousePosition = mousePosition;
@@ -309,6 +328,51 @@ namespace GameEngineUI
                 NativeMethods.AddObject(objectName, filename));
             }
            
+        }
+
+        private void Inspector_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Return)
+                return;
+
+            InspectorToObject();
+        }
+
+        private void ObjectToInspector()
+        {
+            GameObject gameObject = HierarchyListBox.SelectedItem as GameObject;
+
+            if (gameObject == null)
+                return;
+
+            string objectName = gameObject.ToString();
+
+            {
+                PositionX.Text = gameObject.Position.X.ToString("F2");
+                PositionY.Text = gameObject.Position.Y.ToString("F2");
+                PositionZ.Text = gameObject.Position.Z.ToString("F2");
+            }
+
+            NativeMethods.InvokeWithDllProtection(() => NativeMethods.SetObjectPosition(objectName, gameObject.Position));
+        }
+
+        private void InspectorToObject()
+        {
+            GameObject gameObject = HierarchyListBox.SelectedItem as GameObject;
+
+            if (gameObject == null)
+                return;
+            string objectName = gameObject.ToString();
+
+            {
+                Vector3 position;
+                position.X = float.Parse(PositionX.Text);
+                position.Y = float.Parse(PositionY.Text);
+                position.Z = float.Parse(PositionZ.Text);
+                gameObject.Position = position;
+
+                NativeMethods.InvokeWithDllProtection(() => NativeMethods.SetObjectPosition(objectName, gameObject.Position));
+            }
         }
     }
 }
