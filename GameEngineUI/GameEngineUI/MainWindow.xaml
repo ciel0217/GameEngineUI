@@ -4,53 +4,70 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:DXExtensions="clr-namespace:Microsoft.Wpf.Interop.DirectX;assembly=Microsoft.Wpf.Interop.DirectX"
+        xmlns:wfc="clr-namespace:Microsoft.WindowsAPICodePack.Controls.WindowsForms;assembly=Microsoft.WindowsAPICodePack.Shell"
         xmlns:local="clr-namespace:GameEngineUI"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="250"/>
+        </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="250"/>
-        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0">
 
-        <TabControl Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="250"/>
+            </Grid.ColumnDefinitions>
 
-            <TabItem Header="Hierarchy">
-                <ListBox x:Name="HierarchyListBox">
-                </ListBox>
-            </TabItem>
-        </TabControl>
+            <TabControl Grid.Column="0">
 
-        <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Center"
+                <TabItem Header="Hierarchy">
+                    <ListBox x:Name="HierarchyListBox">
+                    </ListBox>
+                </TabItem>
+            </TabControl>
+
+            <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Center"
                       VerticalAlignment="Stretch"/>
-        <Grid Grid.Column ="2" x:Name="host" AllowDrop="True" PreviewDrop="Host_PreviewDrop" MouseMove="Host_MouseMove">
-            <Image>
-                <Image.Source>
-                    <DXExtensions:D3D11Image x:Name="InteropImage" />
-                </Image.Source>
-            </Image>
-        </Grid>
+            <Grid Grid.Column ="2" x:Name="host" AllowDrop="True" PreviewDrop="Host_PreviewDrop" MouseMove="Host_MouseMove">
+                <Image>
+                    <Image.Source>
+                        <DXExtensions:D3D11Image x:Name="InteropImage" />
+                    </Image.Source>
+                </Image>
+            </Grid>
 
-        <GridSplitter Grid.Column="3" Width="4" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
-        <TabControl Grid.Column="4">
+            <GridSplitter Grid.Column="3" Width="4" HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+            <TabControl Grid.Column="4">
 
-            <TabItem Header="Inspector">
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Position"/>
-                        <Label Content="X"/>
-                        <TextBox x:Name="PositionX" Text="0.0" KeyDown="Inspector_KeyDown"/>
-                        <Label Content="Y"/>
-                        <TextBox x:Name="PositionY" Text="0.0" KeyDown="Inspector_KeyDown"/>
-                        <Label Content="Z"/>
-                        <TextBox x:Name="PositionZ" Text="0.0" KeyDown="Inspector_KeyDown"/>
+                <TabItem Header="Inspector">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Position"/>
+                            <Label Content="X"/>
+                            <TextBox x:Name="PositionX" Text="0.0" KeyDown="Inspector_KeyDown"/>
+                            <Label Content="Y"/>
+                            <TextBox x:Name="PositionY" Text="0.0" KeyDown="Inspector_KeyDown"/>
+                            <Label Content="Z"/>
+                            <TextBox x:Name="PositionZ" Text="0.0" KeyDown="Inspector_KeyDown"/>
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
 
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <GridSplitter Grid.Row="1" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+        <TabControl Grid.Row="2">
+            <TabItem Header="Project">
+                <WindowsFormsHost>
+                    <wfc:ExplorerBrowser x:Name="ProjectBrowser"/>
+                </WindowsFormsHost>
             </TabItem>
         </TabControl>
     </Grid>

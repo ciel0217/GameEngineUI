@@ -17,6 +17,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Numerics;
 
+using Microsoft.WindowsAPICodePack.Shell;
+using System.Reflection;
+
 namespace GameEngineUI
 {
     /// <summary>
@@ -55,6 +58,14 @@ namespace GameEngineUI
             this.InitializeComponent();
             this.host.Loaded += new RoutedEventHandler(this.Host_Loaded);
             this.host.SizeChanged += new SizeChangedEventHandler(this.Host_SizeChanged);
+
+            {
+                Assembly assembly = Assembly.GetEntryAssembly();
+                string path = assembly.Location;
+                string dir = System.IO.Path.GetDirectoryName(path);
+
+                ProjectBrowser.Navigate(ShellFileSystemFolder.FromFolderPath(dir));
+            }
         }
 
         private static bool Init()
